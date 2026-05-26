@@ -1,15 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Consumers\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Persistance\" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.16" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.16" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.16" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Consumers\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Accounting.Domain\Accounting.Domain.csproj" />
+	</ItemGroup>
 
 </Project>
