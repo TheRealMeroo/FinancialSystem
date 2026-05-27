@@ -42,9 +42,13 @@ public class DepositRequest : AggregateRoot
         LastUpdatedAt = DateTime.UtcNow;
     }
 
-    public static DepositRequest Create(Guid accountId, decimal amount, string referenceNumber)
+    public static DepositRequest Create(
+        Guid accountId,
+        decimal amount,
+        string referenceNumber)
     {
         var depositRequest = new DepositRequest(accountId, amount, referenceNumber);
+
         depositRequest.AddDomainEvent(
             new DepositRequestedDomainEvent(
                 depositRequest.Id,
@@ -56,6 +60,7 @@ public class DepositRequest : AggregateRoot
 
     public void Complete(Guid journalEntryId)
     {
+        Check.NotEmpty(journalEntryId, nameof(journalEntryId));
         EnsureNotFinalized();
 
         Status = DepositRequestStatus.Completed;
@@ -67,6 +72,7 @@ public class DepositRequest : AggregateRoot
 
     public void Reject(string reason)
     {
+        Check.NotEmpty(reason, nameof(reason));
         EnsureNotFinalized();
 
         Status = DepositRequestStatus.Rejected;
@@ -85,7 +91,4 @@ public class DepositRequest : AggregateRoot
                 AccountingDomainErrorCodes.DepositRequestAlreadyFinalized.ToString()));
         }
     }
-
-
-
 }
