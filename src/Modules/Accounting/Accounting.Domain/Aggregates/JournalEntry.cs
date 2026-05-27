@@ -6,6 +6,8 @@ using Accounting.Domain.Events.JournalEntry;
 using Accounting.Domain.ValueObjects;
 using BuildingBlocks.Domain.Entities;
 using BuildingBlocks.Domain.Exceptions;
+using BuildingBlocks.Domain.Gaurds;
+using System.Globalization;
 
 namespace Accounting.Domain.Aggregates;
 
@@ -30,7 +32,18 @@ public class JournalEntry : AggregateRoot
     }
 
     public static JournalEntry Create(Guid correlationId, string description)
-        => new JournalEntry(description, correlationId);
+    {
+        Check.NotEmpty(correlationId, nameof(correlationId));
+        Check.NotEmpty(description, nameof(description));
+        var journalEntry = new JournalEntry(description, correlationId);
+        journalEntry.AddDomainEvent(
+            new JournalEntryCreatedEvent(
+                journalEntry.Description,
+                journalEntry.CreatedAt,
+                journalEntry.CorrelationId,
+                journalEntry.Status));
+        return journalEntry;
+    }
 
     public void AddLine(Guid accountId, TransactionAmount amount, string description)
     {
