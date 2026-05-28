@@ -51,6 +51,9 @@ public class CreateDepositRequestCommandHandler : ICommandHandler<CreateDepositR
                 new ApplicationError(AccountingApplicationErrorCodes.AccountNotFound,
                 AccountingApplicationErrorCodes.AccountNotFound.ToString()));
 
+        // 3. Domain Logic Execution
+        userAccount.EnsureActive();
+
         var bankAccount = await _accountRepository
             .GetByAccountTypeAsync(AccountType.Bank);
 
@@ -58,9 +61,6 @@ public class CreateDepositRequestCommandHandler : ICommandHandler<CreateDepositR
             return Result<Guid>.Failure(
                 new ApplicationError(AccountingApplicationErrorCodes.AccountNotFound,
                 AccountingApplicationErrorCodes.AccountNotFound.ToString()));
-
-        // 3. Domain Logic Execution
-        userAccount.EnsureActive();
 
         var depositRequest = DepositRequest.Create(
             userAccount.Id,
